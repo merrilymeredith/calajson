@@ -38,6 +38,11 @@ fn main() {
 fn run(input_path: &str) -> Result<(), Error> {
     let mut workbook = calamine::open_workbook_auto(input_path)?;
 
+    println!("{}", json!({
+        "type": "meta",
+        "version": "0",
+    }).to_string());
+
     let sheets = workbook.sheet_names().to_owned();
 
     for (si, s) in sheets.into_iter().enumerate() {
