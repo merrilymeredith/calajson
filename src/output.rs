@@ -1,4 +1,7 @@
 
+use calamine::DataType;
+use serde_json::Value;
+
 // {"type": "sheet", "idx": 1, "name": ""}
 pub struct Sheet {
 	pub idx: u32,
@@ -23,20 +26,25 @@ impl Sheet {
 pub struct Row<'a> {
 	pub idx: u32,
 	pub sheet: &'a Sheet,
-	pub data: Vec<String>,
+	pub data: &'a [DataType],
 }
 
 impl<'a> Row<'a> {
-	pub fn new(idx: u32, sheet: &'a Sheet, data: Vec<String>) -> Self {
+	pub fn new(idx: u32, sheet: &'a Sheet, data: &'a [DataType]) -> Self {
 		Row {idx, sheet, data}
 	}
 	
 	pub fn to_json(&self) -> String {
+                let row: Vec<_> = self.data.iter().map(|c| match c {
+                    DataType::Empty => Value::Null,
+                    any             => Value::String(format!("{}", any)),
+                }).collect();
+
 		json!({
 			"type": "row",
 			"idx": self.idx,
 			"sheet": self.sheet.idx,
-			"data": self.data,
+			"data": row,
 		}).to_string()
 	}
 }
