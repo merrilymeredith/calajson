@@ -4,8 +4,6 @@
 extern crate calamine;
 extern crate clap;
 extern crate failure;
-
-#[macro_use]
 extern crate serde_json;
 
 use std::process;
@@ -13,6 +11,7 @@ use std::process;
 use calamine::Reader;
 use clap::{App, Arg};
 use failure::Error;
+use serde_json::json;
 
 mod output;
 use output::{Sheet, Row};
