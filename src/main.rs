@@ -14,7 +14,7 @@ use failure::Error;
 use serde_json::json;
 
 mod output;
-use output::{Sheet, Row};
+use crate::output::{Sheet, Row};
 
 fn main() {
     let matches = App::new("calajson")
