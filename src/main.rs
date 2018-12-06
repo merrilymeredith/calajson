@@ -1,11 +1,6 @@
 //! `calajson` converts any spreadsheet supported by calamine into a stream of
 //! json lines.
 
-extern crate calamine;
-extern crate clap;
-extern crate failure;
-extern crate serde_json;
-
 use std::process;
 
 use calamine::Reader;

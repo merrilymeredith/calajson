@@ -2,6 +2,7 @@
 name = "calajson"
 version = "0.1.0"
 authors = ["Meredith Howard <mhoward@roomag.org>"]
+edition = "2018"
 
 [dependencies]
 calamine = "~0.14.6"
