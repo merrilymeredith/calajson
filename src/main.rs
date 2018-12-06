@@ -9,16 +9,18 @@ use failure::Error;
 use serde_json::json;
 
 mod output;
-use crate::output::{Sheet, Row};
+use crate::output::{Row, Sheet};
 
 fn main() {
     let matches = App::new("calajson")
         .version("0.1.0")
         .about("Reads your workbook and outputs a stream of JSON lines.")
-        .arg(Arg::with_name("WORKBOOK")
-             .help("The spreadsheet to be converted (formats supported by calamine)")
-             .required(true)
-             .index(1))
+        .arg(
+            Arg::with_name("WORKBOOK")
+                .help("The spreadsheet to be converted (formats supported by calamine)")
+                .required(true)
+                .index(1),
+        )
         .get_matches();
 
     let input_path = matches.value_of("WORKBOOK").unwrap();
@@ -32,10 +34,14 @@ fn main() {
 fn run(input_path: &str) -> Result<(), Error> {
     let mut workbook = calamine::open_workbook_auto(input_path)?;
 
-    println!("{}", json!({
-        "type": "meta",
-        "version": "0",
-    }).to_string());
+    println!(
+        "{}",
+        json!({
+            "type": "meta",
+            "version": "0",
+        })
+        .to_string()
+    );
 
     let sheets = workbook.sheet_names().to_owned();
 
@@ -49,7 +55,6 @@ fn run(input_path: &str) -> Result<(), Error> {
             println!("{}", Row::new(ri as u32, &sheet, r).to_json());
         }
     }
-
 
     Ok(())
 }
