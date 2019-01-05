@@ -66,10 +66,9 @@ use std::process;
 use calamine::Reader;
 use clap::{App, Arg};
 use failure::Error;
-use serde_json::json;
 
 mod output;
-use crate::output::{Row, Sheet};
+use crate::output::*;
 
 fn main() {
     let matches = App::new("calajson")
@@ -94,25 +93,18 @@ fn main() {
 fn run(input_path: &str) -> Result<(), Error> {
     let mut workbook = calamine::open_workbook_auto(input_path)?;
 
-    println!(
-        "{}",
-        json!({
-            "type": "meta",
-            "version": "0",
-        })
-        .to_string()
-    );
+    Meta { version: 0 }.print_json();
 
     let sheets = workbook.sheet_names().to_owned();
 
     for (si, s) in sheets.into_iter().enumerate() {
-        let sheet = Sheet::new(si as u32, s.to_string());
+        let sheet = Sheet::new(si as u32, &s);
 
-        println!("{}", sheet.to_json());
+        sheet.print_json();
 
         let range = workbook.worksheet_range(&s).unwrap()?;
         for (ri, r) in range.rows().enumerate() {
-            println!("{}", Row::new(ri as u32, &sheet, r).to_json());
+            Row::new(ri as u32, &sheet, r).print_json();
         }
     }
 
